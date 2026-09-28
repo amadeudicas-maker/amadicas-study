@@ -4,6 +4,7 @@
 
 const STORAGE_KEY = "amadicas-study-v3";
 const THEME_STORAGE_KEY = "amadicas-study-theme";
+const SIDEBAR_STORAGE_KEY = "amadicas_sidebar_state";
 
 
 /* =========================================================
@@ -201,6 +202,126 @@ function updateThemeButtons() {
 
 
 /* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+function setSidebarCollapsed(
+  collapsed,
+  save = true
+) {
+
+  const app =
+    document.getElementById(
+      "app"
+    );
+
+  const button =
+    document.getElementById(
+      "sidebarToggle"
+    );
+
+  if (!app) return;
+
+  app.classList.toggle(
+    "sidebar-collapsed",
+    collapsed
+  );
+
+  if (button) {
+
+    button.textContent =
+      collapsed
+        ? "☰"
+        : "←";
+
+    button.setAttribute(
+      "aria-expanded",
+      String(!collapsed)
+    );
+
+    button.setAttribute(
+      "aria-label",
+      collapsed
+        ? "Abrir menu"
+        : "Fechar menu"
+    );
+
+    button.setAttribute(
+      "title",
+      collapsed
+        ? "Abrir menu"
+        : "Fechar menu"
+    );
+
+  }
+
+  if (save) {
+
+    localStorage.setItem(
+      SIDEBAR_STORAGE_KEY,
+      collapsed
+        ? "collapsed"
+        : "open"
+    );
+
+  }
+
+}
+
+
+function toggleSidebar() {
+
+  const app =
+    document.getElementById(
+      "app"
+    );
+
+  if (!app) return;
+
+  const collapsed =
+    app.classList.contains(
+      "sidebar-collapsed"
+    );
+
+  setSidebarCollapsed(
+    !collapsed
+  );
+
+}
+
+
+function loadSidebarState() {
+
+  const saved =
+    localStorage.getItem(
+      SIDEBAR_STORAGE_KEY
+    );
+
+  /*
+   * Se o usuário ainda não escolheu:
+   * desktop/tablet começa aberto;
+   * celular começa fechado.
+   *
+   * Depois da primeira escolha,
+   * a preferência fica salva.
+   */
+
+  const collapsed =
+    saved === "collapsed" ||
+    (
+      saved === null &&
+      window.innerWidth <= 800
+    );
+
+  setSidebarCollapsed(
+    collapsed,
+    false
+  );
+
+}
+
+
+/* =========================================================
    INICIALIZAÇÃO
    ========================================================= */
 
@@ -209,6 +330,8 @@ document.addEventListener(
   () => {
 
     loadTheme();
+
+    loadSidebarState();
 
     document
       .querySelectorAll(
