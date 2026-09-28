@@ -229,10 +229,7 @@ function setSidebarCollapsed(
 
   if (button) {
 
-    button.textContent =
-      collapsed
-        ? "☰"
-        : "←";
+    button.textContent = "☰";
 
     button.setAttribute(
       "aria-expanded",
@@ -319,6 +316,27 @@ function loadSidebarState() {
   );
 
 }
+document.addEventListener("click", function (event) {
+  const app = document.getElementById("app");
+  const sidebar = document.querySelector(".sidebar");
+  const toggle = document.getElementById("sidebarToggle");
+
+  if (!app || !sidebar || !toggle) return;
+
+  const isCollapsed =
+    app.classList.contains("sidebar-collapsed");
+
+  if (isCollapsed) return;
+
+  // Clique no botão ☰
+  if (toggle.contains(event.target)) return;
+
+  // Clique dentro da sidebar
+  if (sidebar.contains(event.target)) return;
+
+  // Qualquer clique fora da sidebar
+  setSidebarCollapsed(true);
+});
 
 
 /* =========================================================
