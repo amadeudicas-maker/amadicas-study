@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amadicas Study</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="brand">
+        <div class="brand-mark">A</div>
+
+        <div>
+          <strong>Amadicas</strong>
+          <span>Study</span>
+        </div>
+      </div>
+
+
+      <nav class="sidebar-nav">
+
+        <div class="nav-section-title">
+          ESTUDO
+        </div>
+
+
+        <button
+          class="nav-item active"
+          data-page="dashboard"
+        >
+          <span>⌂</span>
+          Dashboard
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="revisoes"
+        >
+          <span>✓</span>
+          Revisões
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="assuntos"
+        >
+          <span>▦</span>
+          Assuntos
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="simulados"
+        >
+          <span>▤</span>
+          Provas e simulados
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="calendario"
+        >
+          <span>□</span>
+          Calendário
+        </button>
+
+      </nav>
+
+
+      <div class="sidebar-bottom">
+
+        <button
+          class="theme-toggle"
+          type="button"
+          data-theme-toggle
+          aria-label="Alternar tema"
+          title="Alternar tema"
+        >
+          <span class="theme-toggle-icon">☾</span>
+          <span class="theme-toggle-text">Modo escuro</span>
+        </button>
+
+
+        <button
+          class="side-action"
+          onclick="exportData()"
+        >
+          ⇩ Exportar dados
+        </button>
+
+
+        <label class="side-action import-label">
+
+          ⇧ Importar dados
+
+          <input
+            type="file"
+            id="importFile"
+            accept=".json"
+            onchange="importData(event)"
+          >
+
+        </label>
+
+
+        <button
+          class="side-action danger"
+          onclick="resetData()"
+        >
+          ↻ Resetar dados
+        </button>
+
+      </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <header class="mobile-header">
+
+        <div class="brand">
+
+          <div class="brand-mark">
+            A
+          </div>
+
+          <div>
+            <strong>Amadicas</strong>
+            <span>Study</span>
+          </div>
+
+        </div>
+
+
+        <button
+          class="theme-toggle mobile-theme-toggle"
+          type="button"
+          data-theme-toggle
+          aria-label="Alternar tema"
+          title="Alternar tema"
+        >
+          <span class="theme-toggle-icon">☾</span>
+        </button>
+
+      </header>
+
+
+      <div id="pageContent"></div>
+
+    </main>
+
+  </div>
+
+
+  <div id="modalRoot"></div>
+
+
+  <script src="app.js" defer></script>
+
+</body>
+</html>
