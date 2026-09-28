@@ -316,7 +316,7 @@ function loadSidebarState() {
   );
 
 }
-document.addEventListener("click", function (event) {
+document.addEventListener("pointerdown", function (event) {
   const app = document.getElementById("app");
   const sidebar = document.querySelector(".sidebar");
   const toggle = document.getElementById("sidebarToggle");
@@ -328,13 +328,13 @@ document.addEventListener("click", function (event) {
 
   if (isCollapsed) return;
 
-  // Clique no botão ☰
+  // Clique/toque no botão ☰
   if (toggle.contains(event.target)) return;
 
-  // Clique dentro da sidebar
+  // Clique/toque dentro da sidebar
   if (sidebar.contains(event.target)) return;
 
-  // Qualquer clique fora da sidebar
+  // Qualquer toque/clique fora da sidebar
   setSidebarCollapsed(true);
 });
 
