@@ -263,6 +263,8 @@ function setSidebarCollapsed(
 
   }
 
+  updateSidebarBackdrop();
+
 }
 
 
@@ -316,27 +318,294 @@ function loadSidebarState() {
   );
 
 }
-document.addEventListener("pointerdown", function (event) {
-  const app = document.getElementById("app");
-  const sidebar = document.querySelector(".sidebar");
-  const toggle = document.getElementById("sidebarToggle");
 
-  if (!app || !sidebar || !toggle) return;
+
+/*
+ * Cria o backdrop dinamicamente.
+ *
+ * Isso evita precisar alterar o index.html.
+ *
+ * Em telas <= 800px, quando a sidebar estiver
+ * aberta, o backdrop ocupa o restante da tela.
+ * Qualquer toque nele fecha a sidebar.
+ */
+
+function setupSidebarBackdrop() {
+
+  let backdrop =
+    document.getElementById(
+      "sidebarBackdrop"
+    );
+
+  if (!backdrop) {
+
+    backdrop =
+      document.createElement(
+        "div"
+      );
+
+    backdrop.id =
+      "sidebarBackdrop";
+
+    document.body.appendChild(
+      backdrop
+    );
+
+  }
+
+  /*
+   * Estilos aplicados diretamente para que
+   * nenhuma alteração no style.css seja necessária.
+   */
+
+  Object.assign(
+    backdrop.style,
+    {
+
+      position: "fixed",
+
+      top: "0",
+
+      right: "0",
+
+      bottom: "0",
+
+      left: "0",
+
+      background:
+        "rgba(0,0,0,0.28)",
+
+      zIndex: "90",
+
+      display: "none",
+
+      touchAction: "manipulation",
+
+      cursor: "default"
+
+    }
+  );
+
+  backdrop.addEventListener(
+    "pointerdown",
+    event => {
+
+      event.preventDefault();
+
+      event.stopPropagation();
+
+      setSidebarCollapsed(
+        true
+      );
+
+    }
+  );
+
+  /*
+   * Garante que a sidebar fique acima
+   * do backdrop.
+   */
+
+  const sidebar =
+    document.querySelector(
+      ".sidebar"
+    );
+
+  if (sidebar) {
+
+    sidebar.style.zIndex =
+      "100";
+
+  }
+
+  const button =
+    document.getElementById(
+      "sidebarToggle"
+    );
+
+  if (button) {
+
+    button.style.zIndex =
+      "110";
+
+  }
+
+  updateSidebarBackdrop();
+
+}
+
+
+function updateSidebarBackdrop() {
+
+  const backdrop =
+    document.getElementById(
+      "sidebarBackdrop"
+    );
+
+  const app =
+    document.getElementById(
+      "app"
+    );
+
+  if (
+    !backdrop ||
+    !app
+  ) {
+
+    return;
+
+  }
+
+  const sidebar =
+    document.querySelector(
+      ".sidebar"
+    );
+
+  const button =
+    document.getElementById(
+      "sidebarToggle"
+    );
+
+  const isMobileOrTablet =
+    window.innerWidth <= 800;
 
   const isCollapsed =
-    app.classList.contains("sidebar-collapsed");
+    app.classList.contains(
+      "sidebar-collapsed"
+    );
 
-  if (isCollapsed) return;
+  /*
+   * O backdrop só existe visualmente
+   * quando a sidebar está aberta em
+   * celular/tablet.
+   */
 
-  // Clique/toque no botão ☰
-  if (toggle.contains(event.target)) return;
+  if (
+    isMobileOrTablet &&
+    !isCollapsed
+  ) {
 
-  // Clique/toque dentro da sidebar
-  if (sidebar.contains(event.target)) return;
+    backdrop.style.display =
+      "block";
 
-  // Qualquer toque/clique fora da sidebar
-  setSidebarCollapsed(true);
-});
+    if (sidebar) {
+
+      sidebar.style.zIndex =
+        "100";
+
+    }
+
+    if (button) {
+
+      button.style.zIndex =
+        "110";
+
+    }
+
+  } else {
+
+    backdrop.style.display =
+      "none";
+
+  }
+
+}
+
+
+/*
+ * No desktop mantemos o comportamento de
+ * clicar fora da sidebar para fechá-la.
+ *
+ * Em celular/tablet, o backdrop cuida disso,
+ * evitando problemas de pointer/touch.
+ */
+
+document.addEventListener(
+  "pointerdown",
+  function (event) {
+
+    if (
+      window.innerWidth <= 800
+    ) {
+
+      return;
+
+    }
+
+    const app =
+      document.getElementById(
+        "app"
+      );
+
+    const sidebar =
+      document.querySelector(
+        ".sidebar"
+      );
+
+    const toggle =
+      document.getElementById(
+        "sidebarToggle"
+      );
+
+    if (
+      !app ||
+      !sidebar ||
+      !toggle
+    ) {
+
+      return;
+
+    }
+
+    const isCollapsed =
+      app.classList.contains(
+        "sidebar-collapsed"
+      );
+
+    if (isCollapsed) {
+
+      return;
+
+    }
+
+    if (
+      toggle.contains(
+        event.target
+      )
+    ) {
+
+      return;
+
+    }
+
+    if (
+      sidebar.contains(
+        event.target
+      )
+    ) {
+
+      return;
+
+    }
+
+    setSidebarCollapsed(
+      true
+    );
+
+  }
+);
+
+
+/*
+ * Se o usuário girar o tablet/celular
+ * ou redimensionar a janela, atualiza
+ * o comportamento do backdrop.
+ */
+
+window.addEventListener(
+  "resize",
+  updateSidebarBackdrop
+);
 
 
 /* =========================================================
@@ -350,6 +619,8 @@ document.addEventListener(
     loadTheme();
 
     loadSidebarState();
+
+    setupSidebarBackdrop();
 
     document
       .querySelectorAll(
@@ -3609,6 +3880,10 @@ function renderDashboard(
 
 }
 
+
+/* =========================================================
+   PRÓXIMAS REVISÕES
+   ========================================================= */
 
 function buildUpcomingList() {
 
